@@ -1,0 +1,50 @@
+# install-golang.yml
+---
+- name: Install golang
+  hosts: localhost
+  vars:
+     - version: 1.21.1
+  tasks:
+    - name: Download go amd64 tar file
+      get_url:
+        url: https://go.dev/dl/go{{version}}.linux-amd64.tar.gz
+        dest: /tmp/go-linux.tar.gz
+      when: ansible_architecture == "x86_64"
+    
+    - name: Download go arm64 tar file
+      get_url:
+        url: https://go.dev/dl/go{{version}}.linux-arm64.tar.gz
+        dest: /tmp/go-linux.tar.gz
+      when: ansible_architecture == "arm64"
+
+    - name: Delete previous installation
+      file:
+        path: /usr/local/go
+        state: absent
+      become: true
+
+    - name: Extract and install go
+      unarchive:
+        src: /tmp/go-linux.tar.gz
+        dest: /usr/local
+      become: true
+
+    - name: Delete downloaded tar file
+      file:
+        path: /tmp/go-linux.tar.gz
+        state: absent
+
+    - name: Add GOPATH env to .profile
+      lineinfile:
+        path: ~/.profile
+        line: 'export GOPATH=$HOME/go'
+        create: true
+        state: present
+
+    - name: Add go binary path to .profile
+      lineinfile:
+        path: ~/.profile
+        line: 'export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin'
+        create: true
+        state: present
+

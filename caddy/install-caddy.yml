@@ -1,0 +1,32 @@
+# install-caddy.yml
+---
+- name: Install caddy webserver
+  hosts: localhost
+  tasks:
+    - name: Install apt requirements
+      apt:
+        name:
+        - debian-keyring
+        - debian-archive-keyring
+        - apt-transport-https
+        - curl
+        state: present
+        update_cache: yes
+      become: true
+
+    - name: Install Caddy signing key
+      shell: curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+      become: true
+
+    - name: Add Caddy to sources.list.d file
+      get_url:
+        url: https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt
+        dest: /etc/apt/sources.list.d/caddy-stable.list
+      become: true
+
+    - name: Update repositories cache and install caddy
+      apt:
+        name: caddy
+        state: present
+        update_cache: yes
+      become: true
