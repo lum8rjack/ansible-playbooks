@@ -46,8 +46,13 @@
     src: lukerandall.zsh-theme
     dest: ~/.oh-my-zsh/themes/
 
+- name: Get current username
+  shell: whoami
+  register: current_user
+
 - name: Set zsh as the default shell
-  shell: chsh -s $(which zsh) $USER
+  shell: chsh -s $(which zsh) {{ current_user.stdout }}
+  become: true
 
 - name: Debug to 
   debug:
