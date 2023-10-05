@@ -1,0 +1,87 @@
+# install-tools.yml
+---
+- name: Install a variety of tools
+  hosts: localhost
+  tasks:
+    - name: Install apt requirements
+      apt:
+        name:
+        - vim
+        - git
+        - unzip
+        - curl
+        - wget
+        - net-tools
+        - bind9-utils
+        - virtualenv
+        - alien
+        - libpcap-dev
+        - tcpdump
+        state: present
+      become: true
+
+    - name: Download nmap rpm package
+      get_url:
+        url: https://nmap.org/dist/nmap-7.94-1.x86_64.rpm
+        dest: /tmp/nmap.rpm
+      when: ansible_architecture == "x86_64"
+
+    - name: Convert nmap rpm to deb package and install
+      shell: alien -i /tmp/nmap.rpm
+      become: true
+      when: ansible_architecture == "x86_64"
+
+    - name: Delete nmap rpm package files
+      file:
+        path: /tmp/nmap.rpm
+        state: absent
+      when: ansible_architecture == "x86_64"
+
+    - name: Install Google Chrome deb package
+      apt:
+        deb: https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+      when: ansible_architecture == "x86_64"
+      become: true
+
+    - name: Check if Go is already installed
+      stat:
+        path: /usr/local/go/bin/go
+      register: go_binary
+    
+    - name: Install nuclei
+      shell: go install -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@latest
+      when: go_binary.stat.exists == true
+
+    - name: Install httpx
+      shell: go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest
+      when: go_binary.stat.exists == true
+
+    - name: Install subfinder
+      shell: go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
+      when: go_binary.stat.exists == true
+
+    - name: Install dnsx
+      shell: go install -v github.com/projectdiscovery/dnsx/cmd/dnsx@latest
+      when: go_binary.stat.exists == true
+
+    - name: Install waybackurls
+      shell: go install github.com/tomnomnom/waybackurls@latest
+      when: go_binary.stat.exists == true
+
+    - name: Install ffuf
+      shell: go install github.com/ffuf/ffuf@latest
+      when: go_binary.stat.exists == true
+
+    - name: Install gowitness
+      shell: go install github.com/sensepost/gowitness@latest
+      when: go_binary.stat.exists == true
+
+    - name: Install impacket
+      git:
+        repo: https://github.com/fortra/impacket
+        dest: /opt/tools/impacket
+
+    - name: Install SecLists
+      git:
+        repo: https://github.com/danielmiessler/SecLists
+        dest: /opt/tools/SecLists
