@@ -50,8 +50,14 @@
   shell: whoami
   register: current_user
 
+- name: Get zsh path
+  shell: which zsh
+  register: zsh_path
+
 - name: Set zsh as the default shell
-  shell: chsh -s $(which zsh) {{ current_user.stdout }}
+  user:
+    name: "{{ current_user.stdout }}"
+    shell: "{{ zsh_path.stdout }}"
   become: true
 
 - name: Debug to 
