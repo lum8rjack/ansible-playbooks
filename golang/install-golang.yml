@@ -5,6 +5,16 @@
   vars:
      - version: 1.21.1
   tasks:
+    - name: Remove go from apt install
+      apt:
+        name:
+        - golang
+        - golang-doc
+        - golang-go
+        - golang-src
+        state: absent
+      become: true
+
     - name: Download go amd64 tar file
       get_url:
         url: https://go.dev/dl/go{{version}}.linux-amd64.tar.gz
