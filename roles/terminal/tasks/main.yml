@@ -1,0 +1,56 @@
+# tasks file for terminal role
+---
+- name: Install packages (tmux,git,zsh,curl,dnsutils)
+  apt:
+    name:
+    - tmux
+    - git
+    - zsh
+    - curl
+    - dnsutils
+    state: present
+  become: true
+
+- name: .tmux - Clone GitHub repo
+  git:
+    repo: https://github.com/gpakosz/.tmux
+    dest: ~/.tmux
+
+- name: .tmux - Create symbolic link
+  file:
+    src: ~/.tmux/.tmux.conf
+    dest: ~/.tmux.conf
+    state: link
+    force: yes
+
+- name: .tmux - Copy config
+  copy:
+    src: ~/.tmux/.tmux.conf.local
+    dest: ~/
+
+- name: Copy custom tmux config
+  copy:
+    src: custom.tmux.conf.local
+    dest: ~/.tmux.conf.local
+
+- name: ohmyzsh - Install
+  shell: sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+- name: ohmyzsh - Copy zshrc file
+  copy:
+    src: custom.zshrc
+    dest: ~/.zshrc
+
+- name: ohmyzsh - Copy lukerandall theme
+  copy:
+    src: lukerandall.zsh-theme
+    dest: ~/.oh-my-zsh/themes/
+
+- name: Set zsh as the default shell
+  shell: chsh -s $(which zsh) $USER
+
+- name: Debug to 
+  debug:
+    msg: 
+      - "Edit ~/.tmux/plugins/tmux-logging/scripts/variables.sh"
+      - "to change the tmux logging location"
