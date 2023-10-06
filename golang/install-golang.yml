@@ -3,7 +3,7 @@
 - name: Install golang
   hosts: localhost
   vars:
-     - version: 1.21.1
+     - version: 1.21.2
   tasks:
     - name: Remove go from apt install
       apt:
