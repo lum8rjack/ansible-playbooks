@@ -101,4 +101,3 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias checkip="curl checkip.amazonaws.com"
 alias ls="ls --color=auto"
-alias subl="/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl"
