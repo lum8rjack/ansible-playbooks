@@ -11,18 +11,19 @@
         - apt-transport-https
         - curl
         state: present
-        update_cache: yes
       become: true
 
     - name: Install Caddy signing key
-      shell: curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
-      become: true
+      apt_key:
+        url: https://dl.cloudsmith.io/public/caddy/stable/gpg.key
+        state: present
+      become: true  
 
-    - name: Add Caddy to sources.list.d file
-      get_url:
-        url: https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt
-        dest: /etc/apt/sources.list.d/caddy-stable.list
-      become: true
+    # https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt
+    - name: Add caddy repository 1
+      apt_repository:
+        repo: "deb https://dl.cloudsmith.io/public/caddy/stable/deb/debian any-version main"
+        state: present
 
     - name: Update repositories cache and install caddy
       apt:
