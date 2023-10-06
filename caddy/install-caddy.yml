@@ -20,10 +20,11 @@
       become: true  
 
     # https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt
-    - name: Add caddy repository 1
+    - name: Add caddy repository
       apt_repository:
         repo: "deb https://dl.cloudsmith.io/public/caddy/stable/deb/debian any-version main"
         state: present
+      become: true
 
     - name: Update repositories cache and install caddy
       apt:
