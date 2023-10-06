@@ -1,6 +1,6 @@
 # tasks file for terminal role
 ---
-- name: Install packages (tmux,git,zsh,curl,dnsutils)
+- name: Install packages (tmux,git,zsh,curl,dnsutils,xclip)
   apt:
     name:
     - tmux
@@ -8,6 +8,7 @@
     - zsh
     - curl
     - dnsutils
+    - xclip
     state: present
   become: true
 
