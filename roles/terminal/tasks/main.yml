@@ -1,6 +1,6 @@
 # tasks file for terminal role
 ---
-- name: Install packages (tmux,git,zsh,curl,dnsutils,xclip)
+- name: Install packages (tmux,git,zsh,curl,dnsutils,xclip,vim)
   apt:
     name:
     - tmux
@@ -9,8 +9,14 @@
     - curl
     - dnsutils
     - xclip
+    - vim
     state: present
   become: true
+
+- name: vim - Copy vimrc file
+  copy:
+    src: vimrc
+    dest: ~/.vimrc
 
 - name: .tmux - Clone GitHub repo
   git:
