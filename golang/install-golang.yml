@@ -3,7 +3,7 @@
 - name: Install golang
   hosts: localhost
   vars:
-     - version: 1.24.0
+     - version: 1.24.1
   tasks:
     - name: Remove go from apt install
       apt:
@@ -19,14 +19,14 @@
       get_url:
         url: https://go.dev/dl/go{{version}}.linux-amd64.tar.gz
         dest: /tmp/go-linux.tar.gz
-        checksum: sha256:dea9ca38a0b852a74e81c26134671af7c0fbe65d81b0dc1c5bfe22cf7d4c8858
+        checksum: sha256:cb2396bae64183cdccf81a9a6df0aea3bce9511fc21469fb89a0c00470088073
       when: ansible_architecture == "x86_64"
     
     - name: Download go arm64 tar file
       get_url:
         url: https://go.dev/dl/go{{version}}.linux-arm64.tar.gz
         dest: /tmp/go-linux.tar.gz
-        checksum: sha256:c3fa6d16ffa261091a5617145553c71d21435ce547e44cc6dfb7470865527cc7
+        checksum: sha256:8df5750ffc0281017fb6070fba450f5d22b600a02081dceef47966ffaf36a3af
       when: ansible_architecture == "arm64"
 
     - name: Delete previous installation
